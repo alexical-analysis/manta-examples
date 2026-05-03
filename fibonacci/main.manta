@@ -1,0 +1,53 @@
+mod main
+
+fn fib(n i64) i64 {
+    if n <= 1 {
+        return n
+    }
+
+    mut a = 0
+    mut b = 1
+    mut i = 2
+
+    while i <= n {
+        let c = a + b
+        a = b
+        b = c
+        i = i + 1
+    }
+
+    return b
+}
+
+fn print_num(n i64) {
+    // comput the max divisor first
+    mut divisor = 1
+    while divisor * 10 <= n {
+        divisor = divisor * 10
+    }
+
+    while divisor > 0 {
+        match (n / divisor) % 10 {
+            0 { print("0") }
+            1 { print("1") }
+            2 { print("2") }
+            3 { print("3") }
+            4 { print("4") }
+            5 { print("5") }
+            6 { print("6") }
+            7 { print("7") }
+            8 { print("8") }
+            9 { print("9") }
+        }
+        divisor = divisor / 10
+    }
+
+    print("\n")
+}
+
+fn main() {
+    let n = fib(80)
+
+    print("fib(80) = ")
+    print_num(n)
+}
