@@ -1,0 +1,5 @@
+mod main
+
+fn b(msg str) {
+    print(msg)
+}

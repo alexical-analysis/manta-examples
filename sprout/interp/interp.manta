@@ -1,0 +1,17 @@
+mod interp
+
+pub type Interpreter struct {}
+
+type Test struct {
+    msg str
+    count i32
+}
+
+pub fn get_msg() str {
+    let test = Test{
+        msg: "Hello Interp!\n",
+        count: 0,
+    }
+
+    return test.msg
+}

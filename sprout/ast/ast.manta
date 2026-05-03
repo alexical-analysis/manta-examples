@@ -1,0 +1,17 @@
+mod ast
+
+type Atom str
+
+type SExpr struct {
+    head Atom
+    tail []Expr
+}
+
+type Expr enum {
+    // Unit is ()
+    Unit
+    Str(str)
+    Num(f64)
+    Bool(bool)
+    Atom(Atom)
+}

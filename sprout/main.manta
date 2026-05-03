@@ -1,0 +1,14 @@
+mod main
+
+use (
+    "parser"
+    "interp"
+)
+
+fn main() {
+    let p = parser::new_parser()
+
+    let msg = interp::get_msg()
+    a(msg)
+
+}
