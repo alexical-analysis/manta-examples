@@ -1,6 +1,7 @@
 mod main
 
 use (
+    "ast"
     "parser"
     "interp"
 )
@@ -23,7 +24,7 @@ fn main() {
         }
 
         // execute the code and print the result
-        result = interp.exec_expr(expr)
+        let result = interp.exec_expr(expr)
         ast::print_expr(result)
 
         // since we don't actually get user input yet just break out of loop unconditionally for now

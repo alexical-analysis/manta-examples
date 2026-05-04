@@ -9,14 +9,14 @@ pub type Token enum {
     TrueKey
     FalseKey
     Ident(str)
-    PlusaSym
+    PlusSym
     MinusSym
     MultiplySym
     DivideSym
     ModuloSym
     Atom(str)
     EOF
-    Uknown(str)
+    Unknown(str)
 }
 
 // Lexer is the lexer struct for a given source string
@@ -94,7 +94,7 @@ fn (l *Lexer) advance() Token {
 // lex_string lexes a string literal from the lexer source string
 fn (l *Lexer) lex_string() Token {
     let .Some('"') = l.source.get(l.pos) or {
-        return .Uknown("strings must start with a \"")
+        return .Unknown("strings must start with a \"")
     }
 
     // plus 1 here so we don't include the leading double quote
@@ -125,7 +125,7 @@ fn (l *Lexer) lex_string() Token {
 
 fn (l *Lexer) lex_atom() Token {
     let .Some(':') = l.source.get(l.pos) or {
-        return .Unknown("atoms must start with a ':')
+        return .Unknown("atoms must start with a ':'")
     }
 
     // plus 1 here so we don't include the leading double quote
@@ -140,8 +140,8 @@ fn (l *Lexer) lex_atom() Token {
         if is_alpha_numeric(b) { continue }
 
         match b {
-            "-" { continue }
-            "_" { continue }
+            '-' { continue }
+            '_' { continue }
             _ { break}
         }
     }
@@ -155,8 +155,8 @@ fn (l *Lexer) lex_atom() Token {
 
 // is_alphabetic returns true if the given char is a valid ascii letter
 fn is_alphabetic(char u8) bool {
-    let is_lower_case = 'a' > char && char < 'z'
-    let is_upper_case = 'A' > char && char < 'Z'
+    let is_lower_case = char >= 'a' && char <= 'z'
+    let is_upper_case = char >= 'A' && char <= 'Z'
 
     return is_upper_case || is_lower_case
 }
@@ -164,7 +164,7 @@ fn is_alphabetic(char u8) bool {
 // is_alpha_numeric returns true if the given char is a valid ascii letter or number
 fn is_alpha_numeric(char u8) bool {
     let is_alpha = is_alphabetic(char)
-    let is_numeric = '0' > char && char < '9'
+    let is_numeric = char >= '0' && char <= '9'
 
     return is_alpha || is_numeric
 }
@@ -174,5 +174,5 @@ fn (l *Lexer) lex_number() Token {
 }
 
 fn (l *Lexer) lex_identifier() Token {
-    return .Uknown("TODO: implement me")
+    return .Unknown("TODO: implement me")
 }

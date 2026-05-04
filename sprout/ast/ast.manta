@@ -30,3 +30,39 @@ pub type Expr enum {
     // the payload here needs to be a pointer to ensure the Expr can be sized
     SExpr(*SExpr)
 }
+
+// print_symbol prints a Symbol to stdout as its source representation
+fn print_symbol(sym Symbol) {
+    match sym {
+        .Plus     { print("+") }
+        .Minus    { print("-") }
+        .Multiply { print("*") }
+        .Divide   { print("/") }
+        .Mod      { print("%") }
+    }
+}
+
+// print_expr prints a sprout expression to stdout as its source representation
+pub fn print_expr(expr Expr) {
+    match expr {
+        .Unit        { print("()") }
+        .Str(s)      { print("\""); print(s); print("\"") }
+        // TODO: need to figure out how we're going to support printing numbers
+        .Num(n)      { print("<num>") }
+        .Bool(true)  { print("true") }
+        .Bool(false) { print("false") }
+        .Atom(s)     { print(":"); print(s) }
+        .Ident(s)    { print(s) }
+        .Symbol(sym) { print_symbol(sym) }
+        .Error(s)    { print("error: "); print(s) }
+        .SExpr(sexpr) {
+            print("(")
+            print_expr(sexpr.head)
+            for expr in sexpr.tail {
+                print(" ")
+                print_expr(expr)
+            }
+            print(")")
+        }
+    }
+}
