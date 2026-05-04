@@ -1,17 +1,32 @@
 mod ast
 
-type Atom str
-
-type SExpr struct {
-    head Atom
-    tail []Expr
+// SExpr is an s-expression in sprout
+pub type SExpr struct {
+    pub head Expr
+    pub tail []Expr
 }
 
-type Expr enum {
+// Symbol is the list of valid sybols in sprout
+pub type Symbol enum {
+    Plus
+    Minus
+    Divide
+    Multiply
+    Mod
+}
+
+// Expr represents all the sprout expressions
+pub type Expr enum {
     // Unit is ()
     Unit
     Str(str)
     Num(f64)
     Bool(bool)
-    Atom(Atom)
+    Atom(str)
+    Ident(str)
+    Symbol(Symbol)
+    Error(str)
+
+    // the payload here needs to be a pointer to ensure the Expr can be sized
+    SExpr(*SExpr)
 }

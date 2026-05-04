@@ -1,5 +1,0 @@
-mod main
-
-fn a(msg str) {
-    b(msg)
-}

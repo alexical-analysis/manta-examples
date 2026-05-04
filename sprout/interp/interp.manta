@@ -1,17 +1,85 @@
 mod interp
 
+use (
+    "ast"
+)
+
+// Interpreter is the interpreter for a sprout program
 pub type Interpreter struct {}
 
-type Test struct {
-    msg str
-    count i32
+// new_interpreter creates a new interpreter for a sprout program
+pub fn new_interpreter() Interpreter {
+    return Interpreter{}
 }
 
-pub fn get_msg() str {
-    let test = Test{
-        msg: "Hello Interp!\n",
-        count: 0,
+// exec_expr executes a single sprout s-expression
+pub fn (i *Interpreter) exec_expr(expr ast::SExpr) ast::Expr {
+    // TODO: replace with a match statment once those are supported on strings
+    match expr.head {
+        .Ident("print") { return print_tail(expr.tail) }
+        .Symbol("+") { return add_all(expr.tail) }
+        .Symbol("-") { return subtract_all(expr.tail) }
+        _ {
+            eprint("TODO: not all s-expressions are supported yet")
+            return .Unit
+        }
+    }
+}
+
+// print_tail is a builtin function the prints all the arguments in a "print" s-expression
+fn print_tail(tail []Expr) ast::Expr {
+    for expr in tail {
+        match expr {
+            .Str(s) { print(s) }
+            .Unit { print("()" }
+            // TODO: we really should support printing more expression types
+            _ { print("can only print strings for now") }
+        }
     }
 
-    return test.msg
+    return .Unit
+}
+
+// add_all adds all the expressions in the tail together. The values starts at zero
+fn add_all(tail []Expr) ast::Expr {
+    mut sum = 0
+    for expr in tail {
+        match expr {
+            .Num(n) { sum += n }
+            _ { return .Error("can only add numbers together") }
+        }
+    }
+
+    return .Num(sum)
+}
+
+// sub_all subtracts all the expressions from the first expression. If there's only on expression that
+// expression is subtracted from 0
+fn sub_all(tail []Expr) ast::Expr {
+    match tail.len() {
+        0 { return .Num(0) }
+        1 { return sub_from(0, tail) }
+        _ {
+            let .Num(n) = tail[0] or {
+                return .Error("can only subtract numbers from one another")
+            }
+
+            return sub_from(n, tail[1..])
+        }
+    }
+}
+
+// sub_from is a supporting function for sub_all and takes a starting number to subtract the remaining
+// numbers from
+fn sub_from(start f64, tail []Expr) ast::Expr {
+    mut sum = start
+
+    for i in tail {
+        match expr {
+            .Num(n) { sum -= n }
+            _ { return .Error("can only subtract numbers") }
+        }
+    }
+
+    return .Num(sum)
 }

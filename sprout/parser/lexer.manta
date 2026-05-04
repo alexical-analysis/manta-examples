@@ -1,0 +1,178 @@
+mod parser
+
+// Token is all the valid tokens in manta
+pub type Token enum {
+    OpenParen
+    CloseParen
+    String(str)
+    Number(f64)
+    TrueKey
+    FalseKey
+    Ident(str)
+    PlusaSym
+    MinusSym
+    MultiplySym
+    DivideSym
+    ModuloSym
+    Atom(str)
+    EOF
+    Uknown(str)
+}
+
+// Lexer is the lexer struct for a given source string
+type Lexer struct {
+    source str
+    pos u32
+    next Token
+}
+
+// new_lexer creates a new Lexer struct for the given source string
+fn new_lexer(source str) Lexer {
+    mut lex = Lexer{
+        source: source,
+        pos: 0,
+        next: .Unknown,
+    }
+
+    // actually populate the first token so peek works correctly
+    lex.take()
+
+    return lex
+}
+
+// peek returns the next token in the source without actually advancing the lexer. Note that Tokens
+// are only valid as long as the underlying source string is around since tokens index directly into
+// that string
+pub fn (l *Lexer) peek() Token {
+    return l.next
+}
+
+// take returns the next token in the source and advances the lexer. Note that Tokens are only valid
+// as long as the underlying source string is around since tokens index directly into that string
+pub fn (l *Lexer) take() Token {
+    // this works because l.next is a value so updating it in the defer will not actually change the
+    // value of the return
+    defer {
+        let next = l.advance()
+        l.next = next
+    }
+
+    return l.next
+}
+
+// advance does the actual work of lexing a token and then advacing the interal lexer to the next position
+fn (l *Lexer) advance() Token {
+    // if we're out of tokens just start returning EOF on every call
+    let .Some(start) = l.source.get(l.pos) or {
+        return .EOF
+    }
+
+    match start {
+        '(' { return .OpenParen }
+        ')' { return .CloseParen }
+        '+' { return .PlusSym }
+        '-' { return .MinusSym }
+        '*' { return .MultiplySym }
+        '/' { return .DivideSym }
+        '%' { return .ModuloSym }
+        '"' { return l.lex_string() }
+        ':' { return l.lex_atom() }
+        '0' { return l.lex_number() }
+        '1' { return l.lex_number() }
+        '2' { return l.lex_number() }
+        '3' { return l.lex_number() }
+        '4' { return l.lex_number() }
+        '5' { return l.lex_number() }
+        '6' { return l.lex_number() }
+        '7' { return l.lex_number() }
+        '8' { return l.lex_number() }
+        '9' { return l.lex_number() }
+        _ { return l.lex_identifier() }
+    }
+}
+
+// lex_string lexes a string literal from the lexer source string
+fn (l *Lexer) lex_string() Token {
+    let .Some('"') = l.source.get(l.pos) or {
+        return .Uknown("strings must start with a \"")
+    }
+
+    // plus 1 here so we don't include the leading double quote
+    let start = l.pos + 1
+    loop {
+        l.pos++
+
+        let .Some(b) = l.source.get(l.pos) or {
+            return .Unknown("unterminated string")
+        }
+
+        match b {
+            '"' { break }
+            '\n' { return .Unknown("unterminated string") }
+            '\r' { return .Unknown("unterminated string") }
+            _ { continue }
+        }
+    }
+
+    let end = l.pos
+    // plus one here so we move past the final double quote
+    l.pos++
+
+    // slicing like this prevents us needing to do any allocation, it does mean this token is only valid
+    // until the source string gets deallocated though
+    return .String(l.source[start..end])
+}
+
+fn (l *Lexer) lex_atom() Token {
+    let .Some(':') = l.source.get(l.pos) or {
+        return .Unknown("atoms must start with a ':')
+    }
+
+    // plus 1 here so we don't include the leading double quote
+    let start = l.pos + 1
+    loop {
+        l.pos++
+
+        let .Some(b) = l.source.get(l.pos) or {
+            break
+        }
+
+        if is_alpha_numeric(b) { continue }
+
+        match b {
+            "-" { continue }
+            "_" { continue }
+            _ { break}
+        }
+    }
+
+    let end = l.pos
+
+    // slicing like this prevents us needing to do any allocation, it does mean this token is only valid
+    // until the source string gets deallocated though
+    return .Atom(l.source[start..end])
+}
+
+// is_alphabetic returns true if the given char is a valid ascii letter
+fn is_alphabetic(char u8) bool {
+    let is_lower_case = 'a' > char && char < 'z'
+    let is_upper_case = 'A' > char && char < 'Z'
+
+    return is_upper_case || is_lower_case
+}
+
+// is_alpha_numeric returns true if the given char is a valid ascii letter or number
+fn is_alpha_numeric(char u8) bool {
+    let is_alpha = is_alphabetic(char)
+    let is_numeric = '0' > char && char < '9'
+
+    return is_alpha || is_numeric
+}
+
+fn (l *Lexer) lex_number() Token {
+    return .Unknown("TODO: implement me")
+}
+
+fn (l *Lexer) lex_identifier() Token {
+    return .Uknown("TODO: implement me")
+}

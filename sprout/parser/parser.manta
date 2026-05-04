@@ -1,7 +1,29 @@
 mod parser
 
+use (
+    "ast"
+)
+
+// Parser contains all the logic for parsing a string into a sprout program
 pub type Parser struct {}
 
+// new_parser creates a new parser struct
 pub fn new_parser() Parser {
     return Parser{}
+}
+
+// Parse is the return enum for the parse method
+pub type Parse enum {
+    .Ok(ast::SExpr)
+    // TODO: add more specific error cases
+    .ParsingFailed
+}
+
+// parse takes a raw source string and parses it into a valid ast::SExpr
+pub fn (p *Parser) parse(source str) Parse {
+    // remember tokens are only valid as long as the source string is allocated
+    let lexer = new_lexer(source)
+
+    // TODO: implement me
+    return .ParsingFailed
 }

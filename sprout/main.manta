@@ -7,8 +7,26 @@ use (
 
 fn main() {
     let p = parser::new_parser()
+    let interp = interp::new_interpreter()
 
-    let msg = interp::get_msg()
-    a(msg)
+    // this is the repl loop
+    loop {
+        // get this from the cmd line once it's supported
+        let source = "(+ 10 20 30)"
 
+        let .Ok(expr) = p.parse(source) or {
+            print("failed to parse the source\n\t")
+            print(source)
+            print("\n")
+
+            return
+        }
+
+        // execute the code and print the result
+        result = interp.exec_expr(expr)
+        ast::print_expr(result)
+
+        // since we don't actually get user input yet just break out of loop unconditionally for now
+        break
+    }
 }
