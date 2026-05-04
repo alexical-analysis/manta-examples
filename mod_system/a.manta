@@ -1,0 +1,12 @@
+mod main
+
+pub type Person struct {
+    name str
+    age i32
+}
+
+pub fn hello_a(from str) {
+    print("Hello main A from ")
+    print(from)
+    print("\n")
+}

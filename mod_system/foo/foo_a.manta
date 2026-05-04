@@ -1,0 +1,21 @@
+mod foo
+
+use (
+    "mod_system/bar"
+)
+
+pub fn hello_foo(from str) {
+    print("hello foo from ")
+    print(from)
+    print("\n")
+
+    // use code from the bar module
+    bar::hello_bar("foo")
+
+    let node = bar::NodeI32{
+        data: 10,
+        next: .None,
+    }
+
+    let list = bar::new_list_i32(head &node)
+}

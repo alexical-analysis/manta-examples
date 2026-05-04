@@ -1,0 +1,6 @@
+mod foo
+
+pub type Foo enum {
+    Bar
+    Baz
+}
