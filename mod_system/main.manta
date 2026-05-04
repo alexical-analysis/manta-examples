@@ -1,0 +1,25 @@
+mod main
+
+use (
+    "mod_system/foo"
+    "mod_system/bar/baz"
+)
+
+fn main() {
+    // main can see both a.manta and b.manta
+    let person = Person{name: "jill", age: 32}
+    let direction = Direction.Left
+
+    hello_a(person.name)
+    hello_b(person.name)
+
+    // can import public functions and types from foo
+    let f = foo::Foo.Bar
+    foo::hello_foo("main")
+
+    // can also import from bar/baz, it's module name is 'other'
+    let custom = other::RGB{ red: 0, green: 29, blue: 8 }
+    let color = other::Color.Custom(custom)
+
+    other::hello_baz("main")
+}

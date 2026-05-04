@@ -1,0 +1,7 @@
+mod other
+
+pub fn hello_baz(from str) {
+    print("hello baz from ")
+    print(from)
+    print("\n")
+}

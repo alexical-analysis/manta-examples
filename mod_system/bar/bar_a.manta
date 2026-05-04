@@ -1,0 +1,19 @@
+mod bar
+
+pub type MaybeNodeI32 enum {
+    Some(*NodeI32)
+    None
+}
+
+pub type NodeI32 struct {
+    data i32
+    next MaybeNodeI32
+}
+
+pub type ListI32 struct {
+    head MaybeNodeI32
+}
+
+pub fn new_list_i32(head *NodeI32) ListI32 {
+    return ListI32{ head: .Some(head) }
+}

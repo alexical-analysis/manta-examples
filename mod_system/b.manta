@@ -1,0 +1,12 @@
+mod main
+
+pub type Direction enum {
+    Left
+    Right
+}
+
+pub fn hello_b(from str) {
+    print("Hello main B from ")
+    print(from)
+    print("\n")
+}
