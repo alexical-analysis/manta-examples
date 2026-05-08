@@ -17,5 +17,5 @@ pub fn hello_foo(from str) {
         next: .None,
     }
 
-    let list = bar::new_list_i32(head &node)
+    let list = bar::new_list_i32(&node)
 }
