@@ -1,0 +1,27 @@
+mod main
+
+fn main() {
+    print("---\n")
+
+    // defer blocks can contain any code and run when the scope closes
+    defer { print("defer: this is last\n") }
+
+    print("enter the block\n")
+
+    {
+        // this will run when the scope closes, before the defers outside this block
+        defer { print("defer: from inside a block\n") }
+
+        print("in the block\n")
+        {
+            // blocks can be nested infinately
+            defer { print("defer: from inside a block inside a block\n") }
+
+            print("in the block in a block\n")
+        }
+    }
+
+    defer { print("defer: this is second to last\n") }
+
+    print("main is done\n")
+}
