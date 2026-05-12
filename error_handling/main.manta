@@ -1,0 +1,37 @@
+mod main
+
+fn main() {
+    print("---\n")
+
+    let got = div(10, 5)
+    // variant types can be matched on for error handling
+    match got {
+        .Ok(_) { print("success\n") }
+        .DivByZero { print("can not divide by zero\n") }
+    }
+
+    // let/mut are also pattern matching
+    mut .Ok(got) = div(20, 5) or { print("div failed\n") }
+
+    // got was declared as mutable so its value can be changed
+    got = 0
+
+    // ! is the shorthand for "just panic" if this fails the code unwinds
+    let .Ok(got) = div(0, 0) !
+}
+
+// manta prefers explicit types for returning errors rather than sentinel values or exceptions
+type Div enum {
+    Ok(i64)
+    DivByZero
+}
+
+fn div(a, b i64) Div {
+    // matching agains values is allowed
+    match b {
+        // type is infered based on the return type
+        0 { return .DivByZero }
+        _ { return .Ok(a / b) }
+    }
+    // no return needed because all possible paths already return
+}
